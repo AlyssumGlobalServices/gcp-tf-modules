@@ -1,0 +1,43 @@
+name: Deploy to Google Cloud Run
+
+on:
+  workflow_dispatch :
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Cloud Run using Terraform
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Authenticate Terraform with Google Cloud
+        run: |
+          echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > account.json
+          export GOOGLE_APPLICATION_CREDENTIALS=account.json
+          gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.6
+
+      - name: Initialize Terraform
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
