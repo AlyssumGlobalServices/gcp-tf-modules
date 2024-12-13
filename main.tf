@@ -17,7 +17,7 @@ resource "google_cloud_run_service" "service" {
         resources {
           limits = {
             memory = "2048Mi"
-            cpu    = "1"
+            cpu    = "2"
           }
         }
         args = ["start-dev"]
