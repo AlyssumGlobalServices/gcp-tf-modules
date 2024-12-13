@@ -28,7 +28,6 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS=account.json
           gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
 
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
