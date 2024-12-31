@@ -1,0 +1,24 @@
+swagger: '2.0'
+info:
+  title: Keycloak API
+  description: API Gateway for Keycloak
+  version: 1.0.0
+host: keycloak-prod-93326999095.us-central1.run.app  # Replace with your actual Cloud Run URL (without https://)
+basePath: /
+schemes:
+  - https
+paths:
+  /:
+    get:
+      summary: Proxy to Keycloak
+      operationId: getKeycloak
+      responses:
+        '200':
+          description: Keycloak Response
+        '401':
+          description: Unauthorized
+      x-google-backend:
+        address: https://keycloak-prod-93326999095.us-central1.run.app  # Full URL of your Cloud Run service
+        deadline: 30  # Integer value for request timeout (in seconds)
+security: []  # No API key required
+
